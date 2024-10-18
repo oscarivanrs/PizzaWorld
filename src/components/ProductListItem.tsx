@@ -1,7 +1,7 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
 
-import { Colors } from '@/src/constants/Colors';
-import { Product } from '@/src/types';
+import { Colors } from '@constants/Colors';
+import { Product } from '@/types';
 
 const DefaultImage = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png';
 
@@ -12,9 +12,11 @@ type ProductListItemProps = {
 const ProductListItem = ({product}: ProductListItemProps) => {
   return (
     <View style={styles.container}>
-      <Image style={styles.productImage} source={{uri: product.image || DefaultImage }}/>
+    <ImageBackground source={require('@assets/images/partial-react-logo.png')} resizeMode="cover" style={styles.imageBG}>
+      <Image style={styles.productImage} source={{uri: product.image || DefaultImage }} resizeMode='contain'/>
       <Text style={styles.productTitle}>{product.name}</Text>
       <Text style={styles.productPrice}>{product.price} €</Text>
+    </ImageBackground>
     </View>
   );
 }
@@ -23,9 +25,16 @@ export default ProductListItem;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: 'white',
     padding: 10,
-    borderRadius: 20
+    borderRadius: 20,
+    flex: 1,
+    margin: 2,
+    maxWidth: '50%'
+  },
+  imageBG: {
+    justifyContent: 'center',
+    width: '100%',
   },
   productTitle: {
     fontSize: 20,
@@ -33,7 +42,7 @@ const styles = StyleSheet.create({
     marginVertical: 10
   },
   productPrice: {
-    color: Colors.light.tint
+    color: Colors.dark.tint
   },
   productImage: {
     width: '100%',
