@@ -4,7 +4,7 @@ import { Colors } from '@constants/Colors';
 import { Product } from '@/types';
 import { Link } from 'expo-router';
 
-const DefaultImage = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png';
+export const DefaultImage = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png';
 
 type ProductListItemProps = {
     product: Product;
