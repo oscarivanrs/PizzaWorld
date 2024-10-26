@@ -2,20 +2,21 @@ import { Image, ImageBackground, Pressable, StyleSheet, Text } from 'react-nativ
 
 import { Colors } from '@constants/Colors';
 import { Product } from '@/types';
-import { Link } from 'expo-router';
-
-export const DefaultImage = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png';
+import { Link, useSegments } from 'expo-router';
+import { defaultPizzaImage } from '@/constants/Images';
 
 type ProductListItemProps = {
     product: Product;
 }
 
 const ProductListItem = ({product}: ProductListItemProps) => {
+  const segments = useSegments();
+  const path: any = `/${segments[0]}/menu/${product.id.toString()}`;
   return (
-    <Link href={`/menu/${product.id}`} asChild>
+    <Link href={path} asChild>
         <Pressable style={styles.container}>
         <ImageBackground source={require('@assets/images/partial-react-logo.png')} resizeMode="cover" style={styles.imageBG}>
-        <Image style={styles.productImage} source={{uri: product.image || DefaultImage }} resizeMode='contain'/>
+        <Image style={styles.productImage} source={{uri: product.image || defaultPizzaImage }} resizeMode='contain'/>
         <Text style={styles.productTitle}>{product.name}</Text>
         <Text style={styles.productPrice}>{product.price} €</Text>
         </ImageBackground>

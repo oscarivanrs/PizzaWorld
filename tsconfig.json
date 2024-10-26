@@ -13,6 +13,9 @@
       "@constants/*": [
         "src/constants/*"
       ],
+      "@providers/*": [
+        "src/app/providers/*"
+      ],
       "@assets/*": [
         "assets/*"
       ]
