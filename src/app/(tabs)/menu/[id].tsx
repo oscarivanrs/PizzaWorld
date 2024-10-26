@@ -4,6 +4,7 @@ import products from '@assets/data/products';
 import { DefaultImage } from '@components/ProductListItem';
 import { Colors } from '@/constants/Colors';
 import { useState } from 'react';
+import Button from '@/components/Button';
 
 const sizes = ['S', 'M', 'L', 'XL'];
 
@@ -11,6 +12,10 @@ export default function productDetails() {
     const { id } = useLocalSearchParams();
     const [selectedSize, setSelectedSize] = useState('M');
     const product = products.find((p) => p.id.toString() === id);
+
+    const addToCart = () => {
+      console.warn(`Adding to cart ${selectedSize} size.`);
+    };
 
     if(!product) {
         return (
@@ -26,7 +31,6 @@ export default function productDetails() {
           source={{ uri: product.image || DefaultImage }}
           resizeMode="contain"
         />
-        <Text style={styles.productPrice}>€ {product.price}</Text>
         <Text>Select size</Text>
         <View style={styles.productSizes}>
           {sizes.map((size) => (
@@ -55,6 +59,8 @@ export default function productDetails() {
             </Pressable>
           ))}
         </View>
+        <Text style={styles.productPrice}>€ {product.price}</Text>
+        <Button onPress={addToCart} text="Add to cart"></Button>
         <Text>Ingredients: </Text>
       </View>
     );
@@ -77,6 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: Colors.light.tint,
+    marginTop: 'auto'
   },
   productImage: {
     width: "100%",
