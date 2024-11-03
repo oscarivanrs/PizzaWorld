@@ -3,26 +3,13 @@ import { Text, View, Image, StyleSheet, Pressable } from 'react-native';
 import products from '@assets/data/products';
 import { defaultPizzaImage } from '@/constants/Images';
 import { Colors } from '@/constants/Colors';
-import { useState } from 'react';
-import Button from '@/components/Button';
-import { useCart } from '@providers/CartProvider';
 import { PizzaSize } from '@/types';
 
 const sizes: PizzaSize[] = ['S', 'M', 'L', 'XL'];
 
 export default function productDetails() {
     const { id } = useLocalSearchParams();
-    const [selectedSize, setSelectedSize] = useState<PizzaSize>('M');
     const product = products.find((p) => p.id.toString() === id);
-    const { addItem } = useCart();
-    const router = useRouter();
-    const addToCart = () => {
-      if(!product){
-        return;
-      }
-      addItem(product, selectedSize);
-      router.push('/cart');
-    };
 
     if(!product) {
         return (
