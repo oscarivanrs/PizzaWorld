@@ -1,9 +1,9 @@
 import Button from "@/components/Button";
 import { Colors } from "@/constants/Colors";
 import { defaultPizzaImage } from "@/constants/Images";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Image } from "react-native"
+import { View, Text, StyleSheet, TextInput, Image, Alert } from "react-native"
 import * as ImagePicker from 'expo-image-picker';
 
 
@@ -13,6 +13,9 @@ const CreateProductScreen = () => {
     const [price, setPrice] = useState('');
     const [errors, setErrors] = useState('');
     const [image, setImage] = useState<string | null>(null);
+
+    const { id } = useLocalSearchParams();
+    const actionTitle: string = (!!id ? "Update" : "Create" );
 
     const router = useRouter();
 
@@ -49,6 +52,14 @@ const CreateProductScreen = () => {
         router.back();
     }
 
+    const onSubmit = () => {
+        if(!!id) {
+            console.warn('Work in progress ', id);
+        } else {
+            onCreate();
+        }
+    }
+
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -65,9 +76,26 @@ const CreateProductScreen = () => {
         }
       };
 
+    const onDelete = () => {
+        console.warn("Delete not available")
+    }
+
+    const confirmDelete = () => {
+        Alert.alert("Confirm", `Delete product id ${id}?`, [
+            {
+                text: "Cancel"
+            },
+            {
+                text: "Delete",
+                style: 'destructive',
+                onPress: onDelete
+            }
+        ]);
+    }
+
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ title: `Create Product` }} />
+            <Stack.Screen options={{ title: `${actionTitle} Product` }} />
 
             <Image source={{ uri: image || defaultPizzaImage }} style={styles.image} />
             <Text onPress={pickImage} style={styles.textButton}>Select image</Text>
@@ -79,7 +107,8 @@ const CreateProductScreen = () => {
             <TextInput value={price} onChangeText={setPrice} placeholder="5.99" style={styles.input} keyboardType="numeric"/>
 
             <Text style={styles.error}>{errors}</Text>
-            <Button onPress={onCreate} text="Create"></Button>
+            <Button onPress={onSubmit} text={actionTitle}></Button>
+            { !!id && <Text onPress={confirmDelete} style={styles.textButton}>Delete</Text> }
         </View>
     )
 }

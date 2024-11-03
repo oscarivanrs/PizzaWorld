@@ -1,15 +1,19 @@
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { Link, Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Text, View, Image, StyleSheet, Pressable } from 'react-native';
 import products from '@assets/data/products';
 import { defaultPizzaImage } from '@/constants/Images';
 import { Colors } from '@/constants/Colors';
 import { PizzaSize } from '@/types';
+import { FontAwesome } from "@expo/vector-icons";
+
 
 const sizes: PizzaSize[] = ['S', 'M', 'L', 'XL'];
 
 export default function productDetails() {
     const { id } = useLocalSearchParams();
     const product = products.find((p) => p.id.toString() === id);
+
+    const editPath: any = `/(admin)/menu/create?id=${id}`;
 
     if(!product) {
         return (
@@ -19,6 +23,28 @@ export default function productDetails() {
 
     return (
       <View style={styles.container}>
+        <Stack.Screen
+          options={{
+            title: "Product Details",
+            headerRight: () => (
+              <Link href={editPath} asChild>
+                <Pressable>
+                  {({ pressed }) => (
+                    <FontAwesome
+                      name="pencil"
+                      size={25}
+                      color={Colors.light.text}
+                      style={{
+                        marginRight: 15,
+                        opacity: pressed ? 0.5 : 1,
+                      }}
+                    />
+                  )}
+                </Pressable>
+              </Link>
+            ),
+          }}
+        />
         <Stack.Screen options={{ title: `${product?.name}` }} />
         <Image
           style={styles.productImage}
