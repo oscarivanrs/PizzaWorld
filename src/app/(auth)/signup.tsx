@@ -1,20 +1,48 @@
 import Button from "@/components/Button";
 import { Colors } from "@/constants/Colors";
+import { supabase } from "@/lib/supabase";
+import { useNavigation } from "@react-navigation/native";
 import { Link, Stack } from "expo-router";
 import { useState } from "react";
-import { View, StyleSheet, Text, TextInput } from "react-native";
+import { View, StyleSheet, Text, TextInput, Alert } from "react-native";
 
 const SignUp = () => {
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
     const [errors, setErrors] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigation = useNavigation();
+
+    async function signUpWithEmail() {
+      if(!validateInput()) {
+        return;
+      }
+      setLoading(true)
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      })
+  
+      if (error) setErrors(error.message)
+      if (!session) { 
+        Alert.alert('Please check your inbox for email verification!')
+      } else {
+        Alert.alert('Reg OK!')
+        resetFields();
+        navigation.navigate('signin');
+      }
+      setLoading(false)
+    }
 
     const validateInput = () => {
         setErrors('');
-        if (!username) {
-          setErrors('Username is required');
+        if (!email) {
+          setErrors('Email is required');
           return false;
         }
         if (!password) {
@@ -29,15 +57,8 @@ const SignUp = () => {
         return true;
       };
 
-    const onSignUp = () => {
-        if(!validateInput()) {
-            return;
-        }
-        resetFields();
-    }
-
     const resetFields = () => {
-        setUsername('');
+        setEmail('');
         setPassword('');
         setConfPassword('');
     }
@@ -46,8 +67,8 @@ const SignUp = () => {
         <View style={styles.container}>
             <Stack.Screen options={{ title: `Sign in` }} />
 
-            <Text style={styles.label}>Username</Text>
-            <TextInput value={username} onChangeText={setUsername} placeholder="username" style={styles.input} />
+            <Text style={styles.label}>Email</Text>
+            <TextInput value={email} onChangeText={setEmail} placeholder="email@address.com" style={styles.input} />
 
             <Text style={styles.label}>Password</Text>
             <TextInput value={password} onChangeText={setPassword} placeholder="password" style={styles.input} secureTextEntry={true}/>
@@ -56,7 +77,7 @@ const SignUp = () => {
             <TextInput value={confPassword} onChangeText={setConfPassword} style={styles.input} secureTextEntry={true}/>
 
             <Text style={styles.error}>{errors}</Text>
-            <Button onPress={onSignUp} text="Sign up" />
+            <Button onPress={signUpWithEmail} disabled={loading} text={loading ? "Signin up..." : "Sign up"} />
             <Link href="/signin" style={styles.textButton}>Already have an account</Link>
         </View>
     );

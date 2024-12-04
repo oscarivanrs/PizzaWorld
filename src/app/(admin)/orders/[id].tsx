@@ -6,6 +6,7 @@ import { View, StyleSheet, FlatList, Text, Pressable } from "react-native"
 import { OrderStatusList, OrderStatus } from "@/types";
 import { Colors } from "@/constants/Colors";
 import { useState } from "react";
+import React from "react";
 
 export default function orderDetails() {
     const { id } = useLocalSearchParams();

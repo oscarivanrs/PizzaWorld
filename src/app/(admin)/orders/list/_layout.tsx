@@ -1,19 +1,26 @@
 import { Tabs, withLayoutContext } from "expo-router";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Colors } from "@/constants/Colors";
+import OrdersScreen from ".";
 import ArchivedOrdersScreen from "./archive";
-import OrdersScreen from "./index";
 
-const MyTabs = createMaterialTopTabNavigator({
-    screens: {
-      Home: OrdersScreen,
-      Profile: ArchivedOrdersScreen,
-    },
-  });
-
-export const TopTabs = withLayoutContext(
+/*export const Tab = withLayoutContext(
     createMaterialTopTabNavigator().Navigator
-  );
+  );*/
+
+  const Tab = createMaterialTopTabNavigator();
 
 export default function OrderListNavigator() {
-    return <TopTabs />;
+    return (
+      <SafeAreaView edges={['top']} style={{flex: 1, backgroundColor: Colors.light.background}}>
+        <Tab.Navigator screenOptions={{
+          tabBarLabelStyle: { fontSize: 12, color: 'black', textTransform: 'uppercase' },
+          tabBarStyle: { backgroundColor: Colors.light.tint },
+        }}>
+          <Tab.Screen name="index" options={{ title: 'Active' }} component={OrdersScreen}/>
+          <Tab.Screen name="archive" options={{ title: 'Archived' }} component={ArchivedOrdersScreen}/>
+        </Tab.Navigator>
+      </SafeAreaView>
+    );
 }
