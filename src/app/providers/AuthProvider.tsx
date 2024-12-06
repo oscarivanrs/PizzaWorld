@@ -1,3 +1,4 @@
+import { Tables } from "@/database.types";
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
@@ -19,7 +20,7 @@ const AuthContext = createContext<AuthData>({
 export default function AuthProvider({children}: PropsWithChildren) {
 
     const [session,setSession] = useState<Session | null >(null);
-    const [profile,setProfile] = useState(null);
+    const [profile,setProfile] = useState<Tables<'profiles'> | null>(null);
     const [loading,setLoading] = useState(true);
 
     useEffect(() => {

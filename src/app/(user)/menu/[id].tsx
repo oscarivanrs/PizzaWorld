@@ -12,7 +12,7 @@ const sizes: PizzaSize[] = ['S', 'M', 'L', 'XL'];
 
 export default function productDetails() {
     const { id } = useLocalSearchParams();
-    const {data: product, isLoading, error,} = useProduct(parseInt(typeof id === 'string' ? id : id[0]));
+    const {data: product, isLoading, error,} = useProduct(parseInt(typeof id === 'string' ? id : id?.[0]));
     
     if (isLoading) {
       return <ActivityIndicator />;
@@ -42,7 +42,7 @@ export default function productDetails() {
         <Stack.Screen options={{ title: `${product?.name}` }} />
         <Image
           style={styles.productImage}
-          source={{ uri: product.image || defaultPizzaImage }}
+          source={{ uri: product?.image || defaultPizzaImage }}
           resizeMode="contain"
         />
         <Text>Select size</Text>
@@ -73,7 +73,7 @@ export default function productDetails() {
             </Pressable>
           ))}
         </View>
-        <Text style={styles.productPrice}>€ {product.price}</Text>
+        <Text style={styles.productPrice}>€ {product?.price}</Text>
         <Button onPress={addToCart} text="Add to cart"></Button>
         <Text>Ingredients: </Text>
       </View>

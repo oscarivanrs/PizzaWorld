@@ -1,6 +1,5 @@
-import { Link, Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { Link, Stack, useLocalSearchParams } from 'expo-router';
 import { Text, View, Image, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
-import products from '@assets/data/products';
 import { defaultPizzaImage } from '@/constants/Images';
 import { Colors } from '@/constants/Colors';
 import { PizzaSize } from '@/types';
