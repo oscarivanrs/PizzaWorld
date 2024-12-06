@@ -2,22 +2,39 @@ import Button from "@/components/Button";
 import { Colors } from "@/constants/Colors";
 import { defaultPizzaImage } from "@/constants/Images";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput, Image, Alert } from "react-native"
 import * as ImagePicker from 'expo-image-picker';
+import { useDeleteProduct, useInsertProduct, useProduct, useUpdateProduct } from "@/app/api/products";
 
 
 const CreateProductScreen = () => {
-
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [errors, setErrors] = useState('');
     const [image, setImage] = useState<string | null>(null);
 
-    const { id } = useLocalSearchParams();
-    const actionTitle: string = (!!id ? "Update" : "Create" );
+    const { id: idString } = useLocalSearchParams();
+    const id = (!!idString ? parseFloat(
+      typeof idString === 'string' ? idString : idString?.[0]
+    ) : 0) ;
+
+    const { mutate: insertProduct } = useInsertProduct();
+    const { mutate: updateProduct } = useUpdateProduct();
+    const { data: updatingProduct } = useProduct(id);
+    const { mutate: deleteProduct } = useDeleteProduct();
+    
+    const actionTitle: string = (!!idString ? "Update" : "Create" );
 
     const router = useRouter();
+
+    useEffect(()=>{
+      if(!!idString && updatingProduct) {
+        setName(updatingProduct.name);
+        setPrice(updatingProduct.price.toString());
+        setImage(updatingProduct.image);
+      }
+    },[updatingProduct])
 
     const resetFields = () => {
         setName('');
@@ -44,19 +61,40 @@ const CreateProductScreen = () => {
     const onCreate = () => {
 
         if (!validateInput()) {
-            return;
-          }
+          return;
+        }
 
-        console.warn('Creating ', name);
-        resetFields();
-        router.back();
+        insertProduct(
+          { name, price: parseFloat(price), image },
+          {
+            onSuccess: () => {
+              resetFields();
+              router.back();
+            },
+          }
+        );
     }
 
+    const onUpdate = () => {
+      if (!validateInput()) {
+        return;
+      }
+      updateProduct(
+        { id, name, price: parseFloat(price), image },
+        {
+          onSuccess: () => {
+            resetFields();
+            router.back();
+          },
+        }
+      );
+    };
+
     const onSubmit = () => {
-        if(!!id) {
-            console.warn('Work in progress ', id);
+        if(!!idString) {
+          onUpdate();
         } else {
-            onCreate();
+          onCreate();
         }
     }
 
@@ -77,7 +115,12 @@ const CreateProductScreen = () => {
       };
 
     const onDelete = () => {
-        console.warn("Delete not available")
+        deleteProduct(id,{
+          onSuccess: () => {
+            resetFields();
+            router.replace('/(admin)')
+          },
+        });
     }
 
     const confirmDelete = () => {
