@@ -1,4 +1,3 @@
-import { useOrderItems } from "@/app/api/order-items";
 import { useOrderDetails } from "@/app/api/orders";
 import OrderItemListItem from "@/components/OrderItemListItem";
 import OrderListItem from "@/components/OrderListItem";
@@ -10,7 +9,6 @@ export default function orderDetails() {
     const id = parseFloat( typeof idString === 'string' ? idString : idString?.[0] );
 
     const { data: order, isLoading, error } = useOrderDetails(id);
-    const { data: orderItems, isLoading: isLoandingItems, error: errorItems} = useOrderItems(id); 
 
     if (isLoading) {
         return <ActivityIndicator />;
@@ -32,14 +30,10 @@ export default function orderDetails() {
         <View style={styles.container}>
             <Stack.Screen options={{ title: `Order #${order.id}` }} />
             <OrderListItem order={order} />
-            {isLoandingItems ? (
-                <ActivityIndicator />
-            ) : (
-            <FlatList data={orderItems} 
+            <FlatList data={order.order_items} 
             renderItem={({ item }) => <OrderItemListItem orderItem={item} />}
             contentContainerStyle={{ gap: 10 }}
             />
-            )}
         </View>
     );
 }

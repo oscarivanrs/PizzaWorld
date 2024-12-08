@@ -6,14 +6,12 @@ import { OrderStatusList } from "@/types";
 import { Colors } from "@/constants/Colors";
 import React from "react";
 import { useOrderDetails } from "@/app/api/orders";
-import { useOrderItems } from "@/app/api/order-items";
 
 export default function orderDetails() {
     const { id: idString } = useLocalSearchParams();
     const id = parseFloat( typeof idString === 'string' ? idString : idString?.[0] );
 
     const { data: order, isLoading, error } = useOrderDetails(id);
-    const { data: orderItems, isLoading: isLoandingItems, error: errorItems} = useOrderItems(id); 
     
     const updateStatus = async (stato: string) => {
         console.log(`updateStatus(${stato})`)
@@ -39,11 +37,8 @@ export default function orderDetails() {
       <View style={styles.container}>
         <Stack.Screen options={{ title: `Order #${order.id}` }} />
         <OrderListItem order={order} />
-        {isLoandingItems ? (
-          <ActivityIndicator />
-        ) : (
         <FlatList
-          data={orderItems}
+          data={order.order_items}
           renderItem={({ item }) => <OrderItemListItem orderItem={item} />}
           contentContainerStyle={{ gap: 10 }}
           ListFooterComponent={() => (
@@ -82,7 +77,6 @@ export default function orderDetails() {
             </>
           )}
         />
-        )}
       </View>
     );
 }

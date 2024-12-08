@@ -69,7 +69,7 @@ const CartProvider = ({children}: PropsWithChildren) => {
     };
 
     const checkout = () => {
-      insertOrder({ total }, {onSuccess: (data) => saveOrderItems(data)});
+      insertOrder(total, {onSuccess: (data) => saveOrderItems(data)});
     }
 
     const saveOrderItems = (data: Order) => {

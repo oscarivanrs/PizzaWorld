@@ -41,12 +41,12 @@ export const useMyOrders = () => {
   };
 
 export const useOrderDetails = (id: number) => {
-    return useQuery<Order>({
+    return useQuery({
       queryKey: ['order', id],
       queryFn: async () => {
         const { data, error } = await supabase
           .from('orders')
-          .select()
+          .select('*, order_items(*, products(*))')
           .eq('id', id)
           .single();
         if (error) {
@@ -62,8 +62,8 @@ export const useInsertNewOrder = () => {
   const { profile } = useAuth();
 
   return useMutation({
-    async mutationFn(data: OrderInsert) {
-      const { data: newOrder, error } = await supabase.from('orders').insert({...data, user_id: profile?.id!}).select().single();
+    async mutationFn(total: number) {
+      const { data: newOrder, error } = await supabase.from('orders').insert({total, user_id: profile?.id!}).select().single();
       if (error) {
         throw error;
       }
