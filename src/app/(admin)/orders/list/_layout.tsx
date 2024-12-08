@@ -15,8 +15,8 @@ export default function OrderListNavigator() {
     return (
       <SafeAreaView edges={['top']} style={{flex: 1, backgroundColor: Colors.light.background}}>
         <Tab.Navigator screenOptions={{
-          tabBarLabelStyle: { fontSize: 12, color: 'black', textTransform: 'uppercase' },
-          tabBarStyle: { backgroundColor: Colors.light.tint },
+          tabBarLabelStyle: { fontSize: 12, color: Colors.dark.text, textTransform: 'uppercase' },
+          tabBarStyle: { backgroundColor: Colors.dark.tint },
         }}>
           <Tab.Screen name="index" options={{ title: 'Active' }} component={OrdersScreen}/>
           <Tab.Screen name="archive" options={{ title: 'Archived' }} component={ArchivedOrdersScreen}/>

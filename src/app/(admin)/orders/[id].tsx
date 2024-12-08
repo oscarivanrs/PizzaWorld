@@ -1,21 +1,30 @@
 import OrderItemListItem from "@/components/OrderItemListItem";
 import OrderListItem from "@/components/OrderListItem";
-import orders from '@assets/data/orders';
 import { Stack, useLocalSearchParams } from "expo-router";
-import { View, StyleSheet, FlatList, Text, Pressable } from "react-native"
-import { OrderStatusList, OrderStatus } from "@/types";
+import { View, StyleSheet, FlatList, Text, Pressable, ActivityIndicator } from "react-native"
+import { OrderStatusList } from "@/types";
 import { Colors } from "@/constants/Colors";
-import { useState } from "react";
 import React from "react";
+import { useOrderDetails } from "@/app/api/orders";
+import { useOrderItems } from "@/app/api/order-items";
 
 export default function orderDetails() {
-    const { id } = useLocalSearchParams();
-    const order = orders.find((o) => o.id.toString() === id);
-    const [orederStatus, setOrderStatus] = useState<OrderStatus>('New');
+    const { id: idString } = useLocalSearchParams();
+    const id = parseFloat( typeof idString === 'string' ? idString : idString?.[0] );
 
+    const { data: order, isLoading, error } = useOrderDetails(id);
+    const { data: orderItems, isLoading: isLoandingItems, error: errorItems} = useOrderItems(id); 
+    
     const updateStatus = async (stato: string) => {
         console.log(`updateStatus(${stato})`)
       };
+
+    if (isLoading) {
+      return <ActivityIndicator />;
+    }
+    if (error) {
+      return <Text>Failed to fetch</Text>;
+    }
 
     if(!order) {
         return (
@@ -30,8 +39,11 @@ export default function orderDetails() {
       <View style={styles.container}>
         <Stack.Screen options={{ title: `Order #${order.id}` }} />
         <OrderListItem order={order} />
+        {isLoandingItems ? (
+          <ActivityIndicator />
+        ) : (
         <FlatList
-          data={order.order_items}
+          data={orderItems}
           renderItem={({ item }) => <OrderItemListItem orderItem={item} />}
           contentContainerStyle={{ gap: 10 }}
           ListFooterComponent={() => (
@@ -70,6 +82,7 @@ export default function orderDetails() {
             </>
           )}
         />
+        )}
       </View>
     );
 }

@@ -13,16 +13,18 @@ const sizes: PizzaSize[] = ['S', 'M', 'L', 'XL'];
 export default function productDetails() {
     const { id } = useLocalSearchParams();
     const {data: product, isLoading, error,} = useProduct(parseInt(typeof id === 'string' ? id : id?.[0]));
+
+    const [selectedSize, setSelectedSize] = useState<PizzaSize>('M');
+    const { addItem } = useCart();
+    const router = useRouter();
     
     if (isLoading) {
       return <ActivityIndicator />;
     }
-    if (error || !product) {
+    if (error) {
       return <Text>Failed to fetch product</Text>;
     }
-    const [selectedSize, setSelectedSize] = useState<PizzaSize>('M');
-    const { addItem } = useCart();
-    const router = useRouter();
+  
     const addToCart = () => {
       if(!product){
         return;

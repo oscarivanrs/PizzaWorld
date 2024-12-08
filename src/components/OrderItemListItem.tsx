@@ -1,7 +1,8 @@
+import { useProduct } from "@/app/api/products";
 import { Colors } from "@/constants/Colors";
 import { defaultPizzaImage } from "@/constants/Images";
 import { OrderItem } from "@/types";
-import { View, StyleSheet, Image, Text } from "react-native";
+import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
 
 type OrderItemListItemProps = {
     orderItem: OrderItem;
@@ -9,13 +10,22 @@ type OrderItemListItemProps = {
 
 export default function OrderItemListItem({orderItem}: OrderItemListItemProps) {
 
-    const total = (orderItem.quantity * orderItem.products.price);
+    const {data: product, isLoading, error,} = useProduct(orderItem.product_id);
+    const total = (orderItem.quantity * product?.price!);
+
+    if (isLoading) {
+        return <ActivityIndicator />;
+    }
+    
+    if (error) {
+        return <Text>Failed to fetch product id { orderItem.product_id }</Text>;
+    }
 
     return (
         <View style={styles.container}>
-            <Image style={styles.productImage} source={{uri: orderItem.products.image || defaultPizzaImage }} resizeMode='contain'/>
+            <Image style={styles.productImage} source={{uri: product?.image || defaultPizzaImage }} resizeMode='contain'/>
             <View style={{flex: 1}}>
-                <Text style={styles.productName}>{orderItem.products.name}</Text>
+                <Text style={styles.productName}>{product?.name}</Text>
                 <View style={styles.orderPrice}>
                     <Text style={styles.priceText}>${total.toFixed(2)}</Text>
                     <Text>Size: {orderItem.size}</Text>

@@ -16,7 +16,7 @@ export default function productDetails() {
     if (isLoading) {
       return <ActivityIndicator />;
     }
-    if (error || !product) {
+    if (error) {
       return <Text>Failed to fetch product</Text>;
     }
 

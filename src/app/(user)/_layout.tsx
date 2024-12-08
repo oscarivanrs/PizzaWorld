@@ -10,9 +10,10 @@ import { useAuth } from '../providers/AuthProvider';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const {session} = useAuth();
-        if(!session) {
-          return <Redirect href='/' />
-        }
+
+  if(!session) {
+    return <Redirect href='/' />
+  }
 
   return (
     <Tabs
@@ -20,7 +21,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
       }}>
-        <Tabs.Screen name="index" options={{href: null}} />
+      <Tabs.Screen name="index" options={{href: null}} />
       <Tabs.Screen
         name="menu"
         options={{

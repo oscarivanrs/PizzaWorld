@@ -2,10 +2,16 @@ import { Database } from './database.types';
 
 export type Tables<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Row'];
+export type TablesInsert<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Insert'];
+export type TablesUpdate<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Update'];
 export type Enums<T extends keyof Database['public']['Enums']> =
   Database['public']['Enums'][T];
 
-type Product = Tables<'products'>;
+export type Product = Tables<'products'>;
+export type ProductInsert = TablesInsert<'products'>;
+export type ProductUpdate = TablesUpdate<'products'>;
 /*export type Product = {
   id: number;
   image: string | null;
@@ -32,7 +38,10 @@ export const OrderStatusList: OrderStatus[] = [
 
 export type OrderStatus = 'New' | 'Cooking' | 'Delivering' | 'Delivered';
 
-export type Order = {
+export type Order = Tables<'orders'>;
+export type OrderInsert = TablesInsert<'orders'>;
+export type OrderUpdate = TablesUpdate<'orders'>;
+/*export type Order = {
   id: number;
   created_at: string;
   total: number;
@@ -40,17 +49,19 @@ export type Order = {
   status: OrderStatus;
 
   order_items?: OrderItem[];
-};
+};*/
 
-export type OrderItem = {
+export type OrderItem = Tables<'order_items'>;
+/*export type OrderItem = {
   id: number;
   product_id: number;
   products: Product;
   order_id: number;
   size: PizzaSize;
   quantity: number;
-};
+};*/
 
+//export type Profile = Tables<'profiles'>;
 export type Profile = {
   id: string;
   group: string;

@@ -3,9 +3,7 @@ import { Image, ImageBackground, Pressable, StyleSheet, Text } from 'react-nativ
 import { Colors } from '@constants/Colors';
 import { Link, useSegments } from 'expo-router';
 import { defaultPizzaImage } from '@/constants/Images';
-import { Tables } from '@/types';
-
-type Product = Tables<'products'>;
+import { Product } from '@/types';
 
 type ProductListItemProps = {
     product: Product;
