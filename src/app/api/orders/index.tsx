@@ -1,6 +1,6 @@
 import { useAuth } from "@/app/providers/AuthProvider";
 import { supabase } from "@/lib/supabase";
-import { Order, OrderInsert, OrderItem, OrderStatus } from "@/types";
+import { Order, OrderInsert, OrderItem, OrderStatus, OrderUpdate } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useAllOrdersList = ({ archived = false }) => {
@@ -70,7 +70,7 @@ export const useInsertNewOrder = () => {
       return newOrder;
     },
     async onSuccess() {
-      await queryClient.invalidateQueries({queryKey: ['orders', false]});
+      await queryClient.invalidateQueries({queryKey: ['orders']});
       await queryClient.invalidateQueries({queryKey: ['orders', { userId: profile?.id }]});
     },
     onError(error) {
@@ -78,3 +78,31 @@ export const useInsertNewOrder = () => {
     },
   });
 };
+
+export const useUpdateOrder = () => {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      async mutationFn({ order_id, status } : { order_id: number, status: string }) {
+        const { data: updatedOrder , error } = await supabase
+          .from('orders')
+          .update({
+            status: status
+          })
+          .eq('id', order_id)
+          .select();
+  
+        if (error) {
+          throw error;
+        }
+        return updatedOrder ;
+      },
+      async onSuccess(_, { order_id }) {
+        await queryClient.invalidateQueries({queryKey: ['orders']});
+        await queryClient.invalidateQueries({queryKey: ['order', order_id]});
+      },
+      onError(error) {
+        console.log(error);
+      },
+    });
+  };

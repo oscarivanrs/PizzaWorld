@@ -5,16 +5,21 @@ import { View, StyleSheet, FlatList, Text, Pressable, ActivityIndicator } from "
 import { OrderStatusList } from "@/types";
 import { Colors } from "@/constants/Colors";
 import React from "react";
-import { useOrderDetails } from "@/app/api/orders";
+import { useOrderDetails, useUpdateOrder } from "@/app/api/orders";
 
 export default function orderDetails() {
     const { id: idString } = useLocalSearchParams();
     const id = parseFloat( typeof idString === 'string' ? idString : idString?.[0] );
 
     const { data: order, isLoading, error } = useOrderDetails(id);
+    const { mutate: updateOrder} = useUpdateOrder();
     
     const updateStatus = async (stato: string) => {
-        console.log(`updateStatus(${stato})`)
+        if(stato != order?.status ) {
+          console.log(`updateStatus(${stato})`);
+          updateOrder({ order_id: id,  status: stato });
+        }
+        
       };
 
     if (isLoading) {
