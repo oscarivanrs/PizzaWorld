@@ -1,13 +1,13 @@
 import { Database } from './database.types';
 
-export type Tables<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Row'];
-export type TablesInsert<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Insert'];
-export type TablesUpdate<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Update'];
-export type Enums<T extends keyof Database['public']['Enums']> =
-  Database['public']['Enums'][T];
+export type Tables<T extends keyof Database['pizzaWorld']['Tables']> =
+  Database['pizzaWorld']['Tables'][T]['Row'];
+export type TablesInsert<T extends keyof Database['pizzaWorld']['Tables']> =
+  Database['pizzaWorld']['Tables'][T]['Insert'];
+export type TablesUpdate<T extends keyof Database['pizzaWorld']['Tables']> =
+  Database['pizzaWorld']['Tables'][T]['Update'];
+export type Enums<T extends keyof Database['pizzaWorld']['Enums']> =
+  Database['pizzaWorld']['Enums'][T];
 
 export type Product = Tables<'products'>;
 export type ProductInsert = TablesInsert<'products'>;

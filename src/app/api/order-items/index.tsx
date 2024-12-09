@@ -11,7 +11,7 @@ export const useInsertOrderItems = () => {
         items: CartItem[];
         order_id: number;
       }) {
-        const { error } = await supabase.from('order_items').insert(
+        const { error } = await supabase.schema('pizzaWorld').from('order_items').insert(
           items.map((item) => ({
             size: item.size,
             quantity: item.quantity,
@@ -36,6 +36,7 @@ export const useOrderItems = (order_id: number) => {
       queryKey: ['order_items', order_id],
       queryFn: async () => {  
         const { data, error } = await supabase
+          .schema('pizzaWorld')
           .from('order_items')
           .select()
           .eq('order_id', order_id);

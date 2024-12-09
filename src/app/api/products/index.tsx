@@ -6,7 +6,7 @@ export const useProductList = () => {
   return useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('products').select();
+      const { data, error } = await supabase.schema('pizzaWorld').from('products').select();
       if (error) {
         throw new Error(error.message);
       }
@@ -20,6 +20,7 @@ export const useProduct = (id: number) => {
       queryKey: ['product', id],
       queryFn: async () => {
         const { data, error } = await supabase
+          .schema('pizzaWorld')
           .from('products')
           .select()
           .eq('id', id)
@@ -38,7 +39,7 @@ export const useInsertProduct = () => {
   
     return useMutation({
       async mutationFn(data: ProductInsert) {
-        const { data: newProduct, error } = await supabase.from('products').insert({
+        const { data: newProduct, error } = await supabase.schema('pizzaWorld').from('products').insert({
           name: data.name,
           price: data.price,
           image: data.image,
@@ -64,6 +65,7 @@ export const useUpdateProduct = () => {
     return useMutation({
       async mutationFn(data: ProductInsert) {
         const { data: updatedProduct , error } = await supabase
+          .schema('pizzaWorld')
           .from('products')
           .update({
             name: data.name,
@@ -94,6 +96,7 @@ export const useDeleteProduct = () => {
     return useMutation({
       async mutationFn(id: number) {
         const { data, error } = await supabase
+          .schema('pizzaWorld')
           .from('products')
           .delete()
           .eq('id', id)

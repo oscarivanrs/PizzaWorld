@@ -30,7 +30,7 @@ export default function AuthProvider({children}: PropsWithChildren) {
             setSession(session);
             if (session) {
                 // fetch profile
-                const { data } = await supabase
+                const { data } = await supabase.schema('public')
                   .from('profiles')
                   .select('*')
                   .eq('id', session.user.id)
