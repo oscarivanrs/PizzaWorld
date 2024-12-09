@@ -6,14 +6,13 @@ import { useAuth } from './providers/AuthProvider';
 import { supabase } from '@/lib/supabase';
 
 const index = () => {
-  const {session,loading} = useAuth();
+  const {session,loading,isAdmin} = useAuth();
   if(loading) {
     return <ActivityIndicator />
   }
   if(!session) {
     return <Redirect href='/signin' />
   }
-  const {isAdmin} = useAuth();
   /*if(!isAdmin) {
     return <Redirect href='/(user)' />
   }*/
