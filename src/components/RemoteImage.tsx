@@ -1,7 +1,6 @@
-import { Image } from 'react-native';
-import React, { ComponentProps, useEffect, useMemo, useState } from 'react';
-import { supabase } from '../lib/supabase';
-import { BUCKET } from '@/constants/Database';
+import { ActivityIndicator, Image, Text } from 'react-native';
+import React, { ComponentProps} from 'react';
+import { useDownloadImage } from '@/app/api/bucket';
 
 type RemoteImageProps = {
   path?: string | null;
@@ -9,35 +8,15 @@ type RemoteImageProps = {
 } & Omit<ComponentProps<typeof Image>, 'source'>;
 
 const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
-  const [image, setImage] = useState('');
+  const { imagePath, isLoading } = useDownloadImage(path ?? fallback);
 
-  useEffect(() => {
-    if (!path) {
-      path = fallback;
-    }
-    (async () => {
-      setImage('');
-      const { data, error } = await supabase.storage
-        .from(BUCKET)
-        .download(path);
-
-      if (error) {
-        console.log(error);
-      }
-      if (data) {
-        const fr = new FileReader();
-        fr.readAsDataURL(data);
-        fr.onload = () => {
-          setImage(fr.result as string);
-        };
-      }
-    })();
-  }, [path]);
-
-  if (!image) {
+  if (isLoading) {
+    return <ActivityIndicator />;
   }
 
-  return <Image source={{ uri: image || fallback }} {...imageProps} />;
+  return (
+    <Image source={{ uri: imagePath || fallback }} {...imageProps} />
+  );
 };
 
 export default RemoteImage;

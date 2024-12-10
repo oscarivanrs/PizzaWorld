@@ -16,7 +16,6 @@ export default function orderDetails() {
     
     const updateStatus = async (stato: string) => {
         if(stato != order?.status ) {
-          console.log(`updateStatus(${stato})`);
           updateOrder({ order_id: id,  status: stato });
         }
         

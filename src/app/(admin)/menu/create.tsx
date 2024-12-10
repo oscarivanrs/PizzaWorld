@@ -3,7 +3,7 @@ import { Colors } from "@/constants/Colors";
 import { defaultPizzaImage } from "@/constants/Images";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, Image, Alert } from "react-native"
+import { View, Text, StyleSheet, TextInput, Image, Alert, ActivityIndicator } from "react-native"
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
@@ -11,6 +11,7 @@ import { useDeleteProduct, useInsertProduct, useProduct, useUpdateProduct } from
 import { randomUUID } from "expo-crypto";
 import { supabase } from "@/lib/supabase";
 import { BUCKET } from "@/constants/Database";
+import { useDownloadImage } from "@/app/api/bucket";
 
 
 const CreateProductScreen = () => {
@@ -18,11 +19,12 @@ const CreateProductScreen = () => {
     const [price, setPrice] = useState('');
     const [errors, setErrors] = useState('');
     const [image, setImage] = useState<string | null>(null);
-
     const { id: idString } = useLocalSearchParams();
     const id = (!!idString ? parseFloat(
       typeof idString === 'string' ? idString : idString?.[0]
     ) : 0) ;
+    const [downloadedImage, setDownloadedImage] = useState<string | null>(null);
+    const { imagePath, isLoading } = useDownloadImage(downloadedImage ?? defaultPizzaImage);
 
     const { mutate: insertProduct } = useInsertProduct();
     const { mutate: updateProduct } = useUpdateProduct();
@@ -37,9 +39,12 @@ const CreateProductScreen = () => {
       if(!!idString && updatingProduct) {
         setName(updatingProduct.name);
         setPrice(updatingProduct.price.toString());
-        setImage(updatingProduct.image);
+        setDownloadedImage(updatingProduct.image);
       }
-    },[updatingProduct])
+      if(imagePath) {
+        setImage(imagePath)
+      }
+    },[updatingProduct,imagePath])
 
     const resetFields = () => {
         setName('');
@@ -114,9 +119,7 @@ const CreateProductScreen = () => {
           aspect: [4, 3],
           quality: 1,
         });
-    
-        console.log(result);
-    
+        
         if (!result.canceled) {
           setImage(result.assets[0].uri);
         }
@@ -167,7 +170,11 @@ const CreateProductScreen = () => {
         <View style={styles.container}>
             <Stack.Screen options={{ title: `${actionTitle} Product` }} />
 
-            <Image source={{ uri: image || defaultPizzaImage }} style={styles.image} />
+            {isLoading ? (
+              <ActivityIndicator size="large" color={Colors.light.tint} />
+            ) : (
+              <Image source={{ uri: image || defaultPizzaImage }} style={styles.image} />
+            )}
             <Text onPress={pickImage} style={styles.textButton}>Select image</Text>
 
             <Text style={styles.label}>Name:</Text>
