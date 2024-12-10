@@ -42,7 +42,7 @@ const SignIn = () => {
 
     const resetFields = () => {
       setEmail('');
-        setPassword('');
+      setPassword('');
     }
 
     return (

@@ -15,7 +15,7 @@ export default function OrderItemListItem({orderItem}: OrderItemListItemProps) {
     return (
         <View style={styles.container}>
             {/*<Image style={styles.productImage} source={{uri: orderItem.products?.image || defaultPizzaImage }} resizeMode='contain'/>*/}
-            <RemoteImage path={orderItem.products?.image} fallback={defaultPizzaImage} resizeMode='contain'/>
+            <RemoteImage path={orderItem.products?.image} fallback={defaultPizzaImage} resizeMode='contain' style={styles.productImage}/>
             <View style={{flex: 1}}>
                 <Text style={styles.productName}>{orderItem.products?.name}</Text>
                 <View style={styles.orderPrice}>

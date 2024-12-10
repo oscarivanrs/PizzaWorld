@@ -1,6 +1,6 @@
 import { Redirect, Tabs } from 'expo-router';
 import React from 'react';
-
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { TabBarIcon } from '@components/navigation/TabBarIcon';
 import { Colors } from '@constants/Colors';
 import { useColorScheme } from '@../../hooks/useColorScheme';
@@ -39,6 +39,15 @@ export default function TabLayout() {
           title: 'Orders',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'list' : 'list-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="goback"
+        options={{
+          title: 'Back',
+          tabBarIcon: ({ color, focused }) => (
+            <AntDesign name="back" size={24} color={color} />
           ),
         }}
       />

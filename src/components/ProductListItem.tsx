@@ -4,6 +4,7 @@ import { Colors } from '@constants/Colors';
 import { Link, useSegments } from 'expo-router';
 import { defaultPizzaImage } from '@/constants/Images';
 import { Product } from '@/types';
+import RemoteImage from './RemoteImage';
 
 type ProductListItemProps = {
     product: Product;
@@ -16,7 +17,8 @@ const ProductListItem = ({product}: ProductListItemProps) => {
     <Link href={path} asChild>
         <Pressable style={styles.container}>
         <ImageBackground source={require('@assets/images/partial-react-logo.png')} resizeMode="cover" style={styles.imageBG}>
-        <Image style={styles.productImage} source={{uri: product.image || defaultPizzaImage }} resizeMode='contain'/>
+        {/*<Image style={styles.productImage} source={{uri: product.image || defaultPizzaImage }} resizeMode='contain'/>*/}
+        <RemoteImage path={product.image} fallback={defaultPizzaImage} resizeMode='contain' style={styles.productImage}/>
         <Text style={styles.productTitle}>{product.name}</Text>
         <Text style={styles.productPrice}>{product.price} €</Text>
         </ImageBackground>

@@ -1,8 +1,7 @@
 import Button from "@/components/Button";
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
-import { useNavigation } from "@react-navigation/native";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import { View, StyleSheet, Text, TextInput, Alert } from "react-native";
 
@@ -13,7 +12,7 @@ const SignUp = () => {
     const [confPassword, setConfPassword] = useState('');
     const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);
-    const navigation = useNavigation();
+    const router = useRouter();
 
     async function signUpWithEmail() {
       if(!validateInput()) {
@@ -34,7 +33,7 @@ const SignUp = () => {
       } else {
         Alert.alert('Reg OK!')
         resetFields();
-        navigation.navigate('signin');
+        router.push('/(auth)/signin');
       }
       setLoading(false)
     }
