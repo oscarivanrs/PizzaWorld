@@ -12,6 +12,7 @@ const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
   const [image, setImage] = useState('');
 
   useEffect(() => {
+    console.log("Path is " + path)
     if (!path) return;
     (async () => {
       setImage('');
@@ -22,7 +23,8 @@ const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
       if (error) {
         console.log(error);
       }
-
+      console.log("DATA IS ")
+      console.log(data)
       if (data) {
         const fr = new FileReader();
         fr.readAsDataURL(data);

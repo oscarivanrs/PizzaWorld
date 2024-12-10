@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { CartItem, OrderItem } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { SCHEMA } from "@/constants/Database";
+import { SCHEMA, tableOrderItems } from "@/constants/Database";
 
 export const useInsertOrderItems = () => {
     return useMutation({
@@ -12,7 +12,7 @@ export const useInsertOrderItems = () => {
         items: CartItem[];
         order_id: number;
       }) {
-        const { error } = await supabase.schema(SCHEMA).from('order_items').insert(
+        const { error } = await supabase.schema(SCHEMA).from(tableOrderItems).insert(
           items.map((item) => ({
             size: item.size,
             quantity: item.quantity,
@@ -38,7 +38,7 @@ export const useOrderItems = (order_id: number) => {
       queryFn: async () => {  
         const { data, error } = await supabase
           .schema(SCHEMA)
-          .from('order_items')
+          .from(tableOrderItems)
           .select()
           .eq('order_id', order_id);
         if (error) {

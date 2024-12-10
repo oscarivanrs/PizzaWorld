@@ -1,13 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Product, ProductInsert } from '@/types';
-import { SCHEMA } from '@/constants/Database';
+import { SCHEMA, tableProducts } from '@/constants/Database';
 
 export const useProductList = () => {
   return useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: async () => {
-      const { data, error } = await supabase.schema(SCHEMA).from('products').select();
+      const { data, error } = await supabase.schema(SCHEMA).from(tableProducts).select();
       if (error) {
         throw new Error(error.message);
       }
@@ -22,7 +22,7 @@ export const useProduct = (id: number) => {
       queryFn: async () => {
         const { data, error } = await supabase
           .schema(SCHEMA)
-          .from('products')
+          .from(tableProducts)
           .select()
           .eq('id', id)
           .single();
@@ -67,7 +67,7 @@ export const useUpdateProduct = () => {
       async mutationFn(data: ProductInsert) {
         const { data: updatedProduct , error } = await supabase
           .schema(SCHEMA)
-          .from('products')
+          .from(tableProducts)
           .update({
             name: data.name,
             image: data.image,
@@ -98,7 +98,7 @@ export const useDeleteProduct = () => {
       async mutationFn(id: number) {
         const { data, error } = await supabase
           .schema(SCHEMA)
-          .from('products')
+          .from(tableProducts)
           .delete()
           .eq('id', id)
           .select();

@@ -2,7 +2,7 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { Order, OrderInsert, OrderItem, OrderStatus, OrderUpdate } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { SCHEMA } from "@/constants/Database";
+import { SCHEMA, tableOrders } from "@/constants/Database";
 
 export const useAllOrdersList = ({ archived = false }) => {
 
@@ -11,7 +11,7 @@ export const useAllOrdersList = ({ archived = false }) => {
   return useQuery<Order[]>({
     queryKey: ['orders',{archived}],
     queryFn: async () => {
-      const { data, error } = await supabase.schema(SCHEMA).from('orders').select().in('status', statusList).order('created_at', { ascending: false });
+      const { data, error } = await supabase.schema(SCHEMA).from(tableOrders).select().in('status', statusList).order('created_at', { ascending: false });
       if (error) {
         throw new Error(error.message);
       }
@@ -30,7 +30,7 @@ export const useMyOrders = () => {
   
         const { data, error } = await supabase
           .schema(SCHEMA)
-          .from('orders')
+          .from(tableOrders)
           .select('*')
           .eq('user_id', profile.id)
           .order('created_at', { ascending: false });
@@ -48,7 +48,7 @@ export const useOrderDetails = (id: number) => {
       queryFn: async () => {
         const { data, error } = await supabase
           .schema(SCHEMA)
-          .from('orders')
+          .from(tableOrders)
           .select('*, order_items(*, products(*))')
           .eq('id', id)
           .single();
@@ -66,7 +66,7 @@ export const useInsertNewOrder = () => {
 
   return useMutation({
     async mutationFn(total: number) {
-      const { data: newOrder, error } = await supabase.schema(SCHEMA).from('orders').insert({total, user_id: profile?.id!}).select().single();
+      const { data: newOrder, error } = await supabase.schema(SCHEMA).from(tableOrders).insert({total, user_id: profile?.id!}).select().single();
       if (error) {
         throw error;
       }
@@ -89,7 +89,7 @@ export const useUpdateOrder = () => {
       async mutationFn({ order_id, status } : { order_id: number, status: string }) {
         const { data: updatedOrder , error } = await supabase
           .schema(SCHEMA)
-          .from('orders')
+          .from(tableOrders)
           .update({
             status: status
           })
