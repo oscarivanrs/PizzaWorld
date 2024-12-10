@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { SCHEMA } from "@/constants/Database";
 
 export const useInsertOrdersSubscription = () => {
     const queryClient = useQueryClient();
@@ -9,7 +10,7 @@ export const useInsertOrdersSubscription = () => {
         const channels = supabase.channel('custom-insert-channel')
         .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'pizzaWorld', table: 'orders' },
+        { event: 'INSERT', schema: SCHEMA, table: 'orders' },
         (payload) => {
             queryClient.invalidateQueries({queryKey: ['orders']});
         }
@@ -31,7 +32,7 @@ export const useUpdateOrderSubscription = (id: number) => {
             'postgres_changes',
             {
               event: 'UPDATE',
-              schema: 'pizzaWorld',
+              schema: SCHEMA,
               table: 'orders',
               filter: `id=eq.${id}`,
             },

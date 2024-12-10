@@ -6,6 +6,8 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 npm i @tanstack/react-query
 
+npx expo install expo-file-system base64-arraybuffer
+
 ## Get started
 
 1. Install dependencies
