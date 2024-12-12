@@ -15,7 +15,7 @@ const cartScreen = () => {
           contentContainerStyle={{ gap: 10 }}
         />
         <Text style={{ marginTop: 20, fontSize: 20, fontWeight: "500" }}>
-          Total: ${total}
+          Total: €{total}
         </Text>
         <Button onPress={checkout} text="Checkout" />
         <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />

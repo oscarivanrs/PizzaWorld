@@ -64,5 +64,6 @@ export type OrderItem = Tables<'order_items'>;
 //export type Profile = Tables<'profiles'>;
 export type Profile = {
   id: string;
+  full_name: string | null;
   group: string;
 };

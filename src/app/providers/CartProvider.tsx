@@ -4,6 +4,9 @@ import { randomUUID } from "expo-crypto";
 import { useInsertNewOrder } from "../api/orders";
 import { useRouter } from "expo-router";
 import { useInsertOrderItems } from "../api/order-items";
+import { initialisePaymentSheet, openPaymentSheet } from "@/lib/stripe";
+import { useAuth } from "./AuthProvider";
+import { Alert } from "react-native";
 
 type CartType = {
     items: CartItem[],
@@ -25,6 +28,7 @@ const CartProvider = ({children}: PropsWithChildren) => {
     const [items, setItems] = useState<CartItem[]>([]);
     const { mutate: insertOrder } = useInsertNewOrder();
     const { mutate: insertOrderitems } = useInsertOrderItems();
+    const { profile } = useAuth();
     const router = useRouter();
 
     const addItem = (product: Product, size: CartItem['size']) => {
@@ -67,8 +71,17 @@ const CartProvider = ({children}: PropsWithChildren) => {
       setItems([]);
     };
 
-    const checkout = () => {
-      insertOrder(total, {onSuccess: (data) => saveOrderItems(data)});
+    const checkout = async () => {
+      const error = await initialisePaymentSheet(Math.floor(total * 100), profile?.full_name || profile?.id!);
+      if(!error) {
+        const payed = await openPaymentSheet();
+        if (!payed) {
+          return;
+        }
+        insertOrder(total, {onSuccess: (data) => saveOrderItems(data)});
+      } else {
+        Alert.alert(`Error : `, error.message);
+      }
     }
 
     const saveOrderItems = (data: Order) => {

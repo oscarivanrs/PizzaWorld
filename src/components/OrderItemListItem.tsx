@@ -19,7 +19,7 @@ export default function OrderItemListItem({orderItem}: OrderItemListItemProps) {
             <View style={{flex: 1}}>
                 <Text style={styles.productName}>{orderItem.products?.name}</Text>
                 <View style={styles.orderPrice}>
-                    <Text style={styles.priceText}>${total.toFixed(2)}</Text>
+                    <Text style={styles.priceText}>€{total.toFixed(2)}</Text>
                     <Text>Size: {orderItem.size}</Text>
                 </View>
             </View>
