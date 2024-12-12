@@ -24,6 +24,10 @@ npx expo install expo-file-system base64-arraybuffer
 
 npx expo install @stripe/stripe-react-native
 
+npm install --global eas-cli
+
+eas login
+
 ## Set Deno environment 
 
 https://docs.deno.com/runtime/getting_started/setup_your_environment/
@@ -35,6 +39,14 @@ https://docs.expo.dev/versions/v51.0.0/sdk/stripe/
 ## Stripe Test Integration
 
 https://docs.stripe.com/payments/accept-a-payment?platform=react-native#react-native-test
+
+## Setup EAS Build
+
+npm install --global eas-cli
+
+eas login
+
+eas build:configure
 
 ## Get started
 
