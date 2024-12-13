@@ -26,7 +26,7 @@ npx expo install @stripe/stripe-react-native
 
 npm install --global eas-cli
 
-eas login
+npx expo install expo-notifications expo-device expo-constants
 
 ## Set Deno environment 
 
@@ -47,6 +47,16 @@ npm install --global eas-cli
 eas login
 
 eas build:configure
+
+## Push notifications setup
+
+npx expo install expo-notifications expo-device expo-constants
+
+https://docs.expo.dev/push-notifications/push-notifications-setup/
+
+### Push notification test tool
+
+https://expo.dev/notifications
 
 ## Get started
 
