@@ -2,6 +2,7 @@ import {  Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { getAdminsExpoToken, getProfileExpoToken } from '@/app/api/users';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -11,15 +12,23 @@ Notifications.setNotificationHandler({
   }),
 });
 
-async function sendPushNotification(expoPushToken: string) {
-  const message = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
-    data: { someData: 'goes here' },
-  };
+type pushMessage = {
+    to: string;
+    sound: string;
+    title: string;
+    body: string;
+    data: any;
+}
 
+/*const message = {
+    to: profile?.expo_push_token,
+    sound: 'default',
+    title: `#${order.id} order update`,
+    body: `Your order status is ${order.status}`,
+    data: { someData: 'goes here' },
+  };*/
+
+async function sendPushNotification(expoPushToken: string, message: pushMessage) {
   await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',
     headers: {
@@ -74,7 +83,37 @@ export async function registerForPushNotificationsAsync() {
       handleRegistrationError(`${e}`);
     }
   } else {
-    handleRegistrationError('Must use physical device for push notifications');
+    //handleRegistrationError('Must use physical device for push notifications');
   }
   return pushTokenString;
+}
+
+export async function notifyUserAboutOrderUpdate(order: any, status: string) {
+    const expo_push_token = await getProfileExpoToken(order.user_id);
+    if(expo_push_token) {
+        const message = {
+            to: expo_push_token,
+            sound: 'default',
+            title: `#${order.id} order update`,
+            body: `Your order status is ${status}`,
+            data: undefined
+        };
+        await sendPushNotification(expo_push_token, message);
+    }
+}
+
+export async function notifyNewOrder(order: any) {
+    const expo_push_tokens = await getAdminsExpoToken();
+    if(expo_push_tokens) {
+        expo_push_tokens.map((expo_push_token) => {
+            const message = {
+                to: expo_push_token!,
+                sound: 'default',
+                title: `#${order.id} new order`,
+                body: `New order arrived`,
+                data: undefined
+            };
+            sendPushNotification(expo_push_token!, message);
+        });
+    }
 }

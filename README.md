@@ -54,6 +54,8 @@ npx expo install expo-notifications expo-device expo-constants
 
 https://docs.expo.dev/push-notifications/push-notifications-setup/
 
+https://docs.expo.dev/push-notifications/sending-notifications/
+
 ### Push notification test tool
 
 https://expo.dev/notifications

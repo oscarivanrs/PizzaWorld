@@ -7,6 +7,7 @@ import { useInsertOrderItems } from "../api/order-items";
 import { initialisePaymentSheet, openPaymentSheet } from "@/lib/stripe";
 import { useAuth } from "./AuthProvider";
 import { Alert } from "react-native";
+import { notifyNewOrder } from "@/lib/notifications";
 
 type CartType = {
     items: CartItem[],
@@ -88,6 +89,7 @@ const CartProvider = ({children}: PropsWithChildren) => {
       insertOrderitems({items, order_id: data.id}, {onSuccess: () => {
         clearCart();
         router.push(`/(user)/orders/${data.id}`);
+        notifyNewOrder(data)
       }})
     }
 

@@ -6,6 +6,7 @@ import { OrderStatusList } from "@/types";
 import { Colors } from "@/constants/Colors";
 import React from "react";
 import { useOrderDetails, useUpdateOrder } from "@/app/api/orders";
+import { notifyUserAboutOrderUpdate } from "@/lib/notifications";
 
 export default function orderDetails() {
     const { id: idString } = useLocalSearchParams();
@@ -16,7 +17,8 @@ export default function orderDetails() {
     
     const updateStatus = async (stato: string) => {
         if(stato != order?.status ) {
-          updateOrder({ order_id: id,  status: stato });
+          updateOrder({ order_id: id,  status: stato })
+          notifyUserAboutOrderUpdate(order, stato);
         }
         
       };

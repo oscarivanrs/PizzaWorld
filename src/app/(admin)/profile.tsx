@@ -1,12 +1,12 @@
 import { View, Text, Button, StyleSheet } from 'react-native';
 import React from 'react';
+import { useRouter } from 'expo-router';
 import { useAuth } from '../providers/AuthProvider';
 import { Colors } from '@/constants/Colors';
-import { useRouter } from 'expo-router';
 
 const ProfileScreen = () => {
 
-  const { profile, dologout, isAdmin } = useAuth();
+  const { profile, dologout } = useAuth();
   const router = useRouter();
 
   const goBack = () => {
@@ -14,14 +14,13 @@ const ProfileScreen = () => {
   }
 
   const logout = async () => {
-      dologout();
-    }
-  
+    dologout();
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.username}>{profile?.full_name}</Text>
-      {isAdmin ? 
-      <Button onPress={goBack} title="Main"/> : null}
+      <Button onPress={goBack} title="Main"/>
       <Button onPress={logout} title="Sign out"/>
     </View>
   );
@@ -38,10 +37,10 @@ const styles = StyleSheet.create({
     margin: 2,
     flexDirection: 'column',
   },
-  username: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 5,
-    color: Colors.light.tint
-  }
+    username: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginVertical: 5,
+      color: Colors.light.tint
+    }
   });

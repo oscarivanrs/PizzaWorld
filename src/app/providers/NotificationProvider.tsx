@@ -1,18 +1,27 @@
 import { registerForPushNotificationsAsync } from '@/lib/notifications';
-import { ExpoPushToken } from 'expo-notifications';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import * as Notifications from 'expo-notifications';
 import React from 'react';
+import { useProfile } from '../api/users';
 
 const NotificationProvider = ({ children }: PropsWithChildren) => {
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>();
   const [notification, setNotification] = useState<Notifications.Notification | undefined>();
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
+  const { saveExpoPushToken } = useProfile();
+
+  const savePushToken = async (newToken: string | undefined) => {
+    setExpoPushToken(newToken);
+    if (!newToken) {
+      return;
+    }
+    await saveExpoPushToken(newToken);
+    };
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
+        savePushToken(token)
     );
 
     notificationListener.current =
@@ -35,8 +44,9 @@ const NotificationProvider = ({ children }: PropsWithChildren) => {
     };
   }, []);
 
-  console.log(notification);
-  console.log(expoPushToken);
+  if(notification) {
+    console.log(notification);
+  }
 
   return <>{children}</>;
 };

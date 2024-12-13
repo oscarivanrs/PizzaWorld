@@ -43,11 +43,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="goback"
+        name="profile"
         options={{
-          title: 'Back',
-          tabBarIcon: ({ color, focused }) => (
-            <AntDesign name="back" size={24} color={color} />
+          title: 'Profile',
+          headerShown: true,
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="user" size={24} color={color} />
           ),
         }}
       />

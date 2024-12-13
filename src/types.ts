@@ -66,4 +66,5 @@ export type Profile = {
   id: string;
   full_name: string | null;
   group: string;
+  expo_push_token: string | null | undefined;
 };
